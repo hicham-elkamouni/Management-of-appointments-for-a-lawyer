@@ -114,7 +114,6 @@ class ApiUser
         header('Access-Control-Allow-Headers: content-type');
         header('Content-Type: application/json');
 
-
         // instantiate Database
         $database = new Database();
         $db = $database->connect();
