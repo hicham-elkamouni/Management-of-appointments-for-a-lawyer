@@ -4,6 +4,58 @@
 class ApiUser
 {
 
+    public function index()
+    {
+        // header('Location:')
+        echo ("this an index method");
+    }
+
+    public function getUserInfos($id)
+    {
+        // headers
+        header('Access-Control-Allow-Origin:*');
+        header('Content-Type: application/json');
+
+        // instantiate Database
+        $database = new Database();
+        $db = $database->connect();
+
+        // instantiate User object
+        $user = new Users($db);
+
+        // user informations
+        $user_array = array();
+
+        // get user id
+        $user->userId = $id;
+
+        // user read query
+        $result = $user->read_single();
+
+        if ($result) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+
+
+            $user_array = array(
+                'userId' => $userId,
+                'userFirstName' => $userFirstName,
+                'userLastName' => $userLastName,
+                'userCIN' => $userCIN,
+                'userEmail' => $userEmail,
+                'Reference' => $Reference
+            );
+
+            echo json_encode(
+                array($user_array)
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'user not inserted')
+            );
+        }
+    }
+
 
     public function read()
     {

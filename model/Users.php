@@ -35,11 +35,13 @@ class Users
     }
 
     // get one user informations
-    public function read_single($id)
+    public function read_single()
     {
-        $query = 'SELECT * FROM' . $this->table . 'where userId=' . $id;
+        $query = 'SELECT * FROM users  where userId=:userId ';
         // prepare statement
         $stmt = $this->conn->prepare($query);
+        // bind user id
+        $stmt->bindParam(':userId', $this->userId);
         // execute statement
         $stmt->execute();
         return $stmt;
