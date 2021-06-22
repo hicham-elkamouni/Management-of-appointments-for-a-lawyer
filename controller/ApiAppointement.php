@@ -233,33 +233,31 @@ class ApiAppointement
         // get raw posted data
         $data = json_decode(file_get_contents("php://input"));
 
-        $result = $Appointement->checkAvailableTimes();
+        $date = $data->c_date;
+
+        // sending inserted date as paramater
+        $result = $Appointement->checkAvailableTimes($date);
 
         $num = $result->rowCount();
-
+        
         $All_available_reservations = array();
-
-        // print_r()
-
+        
         if ($num > 0) {
 
             while ($rows = $result->fetch(PDO::FETCH_ASSOC)) {
-                /* echo($rows["start_at"]);
-                print_r($rows);
-                die();
-                extract($rows);
-                echo(extract($rows));
-                die(); */
                 $available_reservations = array(
                     'start_at' => $rows["start_at"],
-                    'end_at' => $rows["start_at"]
-                );
-                print_r($available_reservations);
+                    'end_at' => $rows["end_at"]
+                );            
                 // Push to "data"
-            array_push($All_available_reservations, $available_reservation);
+                array_push($All_available_reservations, $available_reservations);
         }
-        die();
         echo json_encode($All_available_reservations);
+        die();
+        }else{
+            // there is no available dates 
+            $message = array("message" => "you dan't have any appointements");
+            echo json_encode($message);
         }
     }
 }

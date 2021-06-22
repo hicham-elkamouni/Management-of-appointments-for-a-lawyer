@@ -121,97 +121,18 @@ class Appointements
         return $stmt;
     }
 
-    public function checkAvailableTimes()
+    public function checkAvailableTimes($date)
     {
 
         $query = "SELECT start_at, end_at FROM timeslots WHERE NOT EXISTS (SELECT * FROM appointements WHERE appointements.timeslot_id_fk = timeslots.timeslot_id AND appointements.c_date = :c_date);";
-
-
-        $date = new DateTime($this->c_date);
-        $result = $date->format('Y-m-d');
-
+        /* $date = new DateTime($this->c_date);
+        $result = $date->format('Y-m-d'); */
         // prepare the query
-        /* $date = htmlspecialchars($this->c_date); */
-
         $stmt = $this->conn->prepare($query);
-
         // bind the id
-        /* echo var_dump($this->c_date);
-        die(); */
-
-        $stmt->bindParam(':c_date', $result);
-
+        $stmt->bindParam(':c_date', $date);
         // // execute statement
         $stmt->execute();
-
         return $stmt;
     }
 }
-
-
-
-// if ($num > 0) {
-
-//     while ($rows = $result->fetch(PDO::FETCH_ASSOC)) {
-//         extract($row);
-//         $available_reservation = array(
-//             'start_at' => $start_at,
-//             'end_at' => $end_at
-//         );
-//         // Push to "data"
-//         array_push($All_available_reservations, $available_reservation);
-//         // array_push($posts_arr['data'], $post_item);
-//     }
-
-
-//     public function checkAvailableTimes()
-//     {
-//         // headers
-//         header('Access-Control-Allow-Origin: *');
-//         header('Access-Control-Allow-Credentials: true');
-//         header('Access-Control-Allow-Methods:POST,GET');
-//         header('Access-Control-Allow-Headers: content-type');
-//         header('Content-Type: application/json');
-
-//         // instantiate Database
-//         $database = new Database();
-//         $db = $database->connect();
-
-//         // instantiate Appointment object
-//         $Appointement = new Appointements($db);
-
-//         // get raw posted data
-//         $data = json_decode(file_get_contents("php://input"));
-
-//         /* echo var_dump($data);
-//         die(); */
-
-//         // $Appointement->c_date = $data->c_date;
-//         // $Appointement->c_date = "2020-06-23";
-
-//         $result = $Appointement->checkAvailableTimes();
-
-//         $num = $result->rowCount();
-
-//         $All_available_reservations = array();
-        
-//         if($num > 0) {
-
-//             while($rows = $result->fetch(PDO::FETCH_ASSOC)){
-                
-//             }
-//         }
-
-
-//     }
-        
-
-        // array_push($userInfo, $message);
-
-        // echo var_dump($result);
-        // die();
-        // $num;
-        // if (num > 0) {
-        // } else {
-        // }
-        
