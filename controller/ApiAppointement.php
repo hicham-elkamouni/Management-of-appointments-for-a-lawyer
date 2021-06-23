@@ -253,7 +253,7 @@ class ApiAppointement
                 array_push($All_available_reservations, $available_reservations);
         }
         echo json_encode($All_available_reservations);
-        die();
+        
         }else{
             // there is no available dates 
             $message = array("message" => "you dan't have any appointements");
