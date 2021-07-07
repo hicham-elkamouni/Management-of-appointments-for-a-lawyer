@@ -1,7 +1,12 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods:POST,GET');
+header('Access-Control-Allow-Headers: content-type');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-
+if($_SERVER["REQUEST_METHOD"]=="OPTIONS") return true;
 spl_autoload_register(function ($class) {
     $path = "model/" . $class . ".php";
     if (file_exists($path)) {

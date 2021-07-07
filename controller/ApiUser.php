@@ -1,5 +1,9 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
+header('Access-Control-Allow-Methods:POST,GET');
+header('Access-Control-Allow-Headers: content-type');
+header('Content-Type: application/json');
 
 class ApiUser
 {
@@ -13,8 +17,6 @@ class ApiUser
     public function getUserInfos($id)
     {
         // headers
-        header('Access-Control-Allow-Origin:*');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -61,8 +63,6 @@ class ApiUser
     {
 
         // headers
-        header('Access-Control-Allow-Origin:*');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -108,11 +108,7 @@ class ApiUser
     {
 
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
+       
 
         // instantiate Database
         $database = new Database();
@@ -150,8 +146,10 @@ class ApiUser
             $u_arr = array();
             if ($user->create()) {
     
-                $u_arr = array('message' => 'user iserted',
-                'state' => true,'reference'=>$user->Reference);
+                $u_arr = array(
+                'message' => 'user iserted',
+                'state' => true,
+                'reference'=>$user->Reference);
     
                 echo json_encode($u_arr);
     
@@ -173,30 +171,35 @@ class ApiUser
     public function checkUser()
     {
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
         $db = $database->connect();
 
-        // instantiate User object
+        // instantiate User Object
         $user = new Users($db);
 
         // get raw posted data
         $data = json_decode(file_get_contents("php://input"));
 
         $user->Reference = $data->Reference;
+        // check if the token is valid or not 
+        $userInfo = $user->checkUserExistence();
+        
+        // get the resuslt as [$userInfo]
+        
+        if ($userInfo != false) {
+            
+            $u = array('userInfo' => $userInfo,
+                        'status' => true);
 
-        $userId = $user->checkUserExistence();
-
-        if ($userId != false) {
-            echo json_encode($userId);
+            echo json_encode($u);
         } else {
-            echo json_encode("there's no id");
+
+            $u = array('message' => "there's no id",
+                        'status' => false);
+
+            echo json_encode($u);
         }
     }
 }

@@ -109,8 +109,7 @@ class Appointements
 
     public function getAppointements()
     {
-        $query = "SELECT * from appointements where userId_fk = :userId_fk";
-
+        $query = "SELECT * from appointements, timeslots where userId_fk = :userId_fk and appointements.timeslot_id_fk = timeslots.timeslot_id";
         // prepare the query
         $stmt = $this->conn->prepare($query);
         // bind the id
@@ -121,16 +120,16 @@ class Appointements
         return $stmt;
     }
 
-    public function checkAvailableTimes($date)
+    public function checkAvailableTimes()
     {
 
-        $query = "SELECT start_at, end_at FROM timeslots WHERE NOT EXISTS (SELECT * FROM appointements WHERE appointements.timeslot_id_fk = timeslots.timeslot_id AND appointements.c_date = :c_date);";
+        $query = "SELECT timeslot_id , start_at, end_at FROM timeslots WHERE NOT EXISTS (SELECT * FROM appointements WHERE appointements.timeslot_id_fk = timeslots.timeslot_id AND appointements.c_date = :c_date);";
         /* $date = new DateTime($this->c_date);
         $result = $date->format('Y-m-d'); */
         // prepare the query
         $stmt = $this->conn->prepare($query);
         // bind the id
-        $stmt->bindParam(':c_date', $date);
+        $stmt->bindParam(':c_date', $this->c_date);
         // // execute statement
         $stmt->execute();
         return $stmt;

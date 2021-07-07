@@ -9,12 +9,6 @@ class ApiAppointement
     {
 
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
-
 
         // instantiate Database
         $database = new Database();
@@ -31,11 +25,6 @@ class ApiAppointement
     {
 
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -55,11 +44,13 @@ class ApiAppointement
         if ($Appointement->createAnAppointement()) {
 
             echo json_encode(
-                array('message' => 'Appointment iserted')
+                array('message' => 'Appointment iserted',
+                    'status' => true)
             );
         } else {
             echo json_encode(
-                array('message' => 'Appointment is not inserted')
+                array('message' => 'Appointment is not inserted',
+                    'status' => false)
             );
         }
     }
@@ -68,13 +59,7 @@ class ApiAppointement
     {
 
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
-
-
+        
         // instantiate Database
         $database = new Database();
         $db = $database->connect();
@@ -103,11 +88,6 @@ class ApiAppointement
     {
 
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:PUT');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -142,8 +122,6 @@ class ApiAppointement
     public function showMyAppointments($id)
     {
         // headers
-        header('Access-Control-Allow-Origin:*');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -158,12 +136,16 @@ class ApiAppointement
 
         $userInfo = array();
         $myInfo = array();
-
+        
+        $user = array();
+        $user['personal_infos'] = array();
+        $user['appointements'] = array();
+        
         if ($result) {
             $row = $result->fetch(PDO::FETCH_ASSOC);
             extract($row);
 
-            $myInfo = array(
+            $user['personal_infos'] = array(
                 'userId' => $userId,
                 'userFirstName' => $userFirstName,
                 'userLastName' => $userLastName,
@@ -173,9 +155,6 @@ class ApiAppointement
             );
         }
 
-        // push myInfo to the global array userInfo 
-        array_push($userInfo, $myInfo);
-        // instantiate appointement object
         $Appointement = new Appointements($db);
         //get the user_id_fk
         $Appointement->userId_fk = $id;
@@ -188,27 +167,30 @@ class ApiAppointement
             // Appointement array
             $myAppointments = array();
             // $posts_arr['data'] = array();
+            $i=0;
 
             while ($row = $appointement_result->fetch(PDO::FETCH_ASSOC)) {
                 extract($row);
 
-                $myAppointments = array(
+                $user['appointements'][$i] = array(
+                    'appointement_id' => $appointement_id,
                     'userId_fk' => $userId_fk,
                     'timeslot_id_fk' => $timeslot_id_fk,
                     'user_subject' => html_entity_decode($user_subject),
-                    'c_date' => $c_date
+                    'c_date' => $c_date,
+                    'start_at' => $start_at,
+                    'end_at' => $end_at
                 );
-
-                // Push to "userInfo"
-                array_push($userInfo, $myAppointments);
-                // array_push($posts_arr['data'], $post_item);
+                $i++;
             }
 
+            $user['status'] = true;
             // Turn to JSON & output
-            echo json_encode($userInfo);
+            echo json_encode($user);
         } else {
             // No Appointements
-            $message = array("message" => "you dan't have any appointements");
+            $message = array("message" => "you dont have any appointements",
+                        "status" => false);
             array_push($userInfo, $message);
             echo json_encode($userInfo);
         }
@@ -217,11 +199,6 @@ class ApiAppointement
     public function checkAvailableTimes()
     {
         // headers
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods:POST,GET');
-        header('Access-Control-Allow-Headers: content-type');
-        header('Content-Type: application/json');
 
         // instantiate Database
         $database = new Database();
@@ -233,31 +210,36 @@ class ApiAppointement
         // get raw posted data
         $data = json_decode(file_get_contents("php://input"));
 
-        $date = $data->c_date;
+        // get the inserted date
+        $Appointement->c_date = $data->c_date;
 
         // sending inserted date as paramater
-        $result = $Appointement->checkAvailableTimes($date);
+        $result = $Appointement->checkAvailableTimes();
 
         $num = $result->rowCount();
         
         $All_available_reservations = array();
+        $All_available_reservations['data'] = array();
         
         if ($num > 0) {
 
             while ($rows = $result->fetch(PDO::FETCH_ASSOC)) {
                 $available_reservations = array(
+                    'timeslot_id' => $rows["timeslot_id"],
                     'start_at' => $rows["start_at"],
                     'end_at' => $rows["end_at"]
                 );            
                 // Push to "data"
-                array_push($All_available_reservations, $available_reservations);
+                array_push($All_available_reservations['data'], $available_reservations);
         }
+        $All_available_reservations['status'] = true;
         echo json_encode($All_available_reservations);
         
         }else{
-            // there is no available dates 
-            $message = array("message" => "you dan't have any appointements");
-            echo json_encode($message);
+            
+            $msg = array("message" => "you dont have any appointements",
+                        "status" => false);
+            echo json_encode($msg);
         }
     }
 }

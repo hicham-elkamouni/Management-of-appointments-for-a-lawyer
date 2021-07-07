@@ -85,12 +85,12 @@ class Users
 
     public function checkUserExistence()
     {
-        $query = "SELECT userId FROM users WHERE Reference = :Reference";
+        $query = "SELECT * FROM users WHERE Reference = :Reference";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':Reference', $this->Reference);
         $stmt->execute();
-        $result = $stmt->fetchColumn();
-
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
         return $result;
     }
 }

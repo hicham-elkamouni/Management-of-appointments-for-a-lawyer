@@ -37,14 +37,15 @@ export default {
   methods: {
     async signup() {
       // console.log(5555);
+      let obj = {
+        userFirstName: this.userFirstName,
+        userLastName: this.userLastName,
+        userCIN: this.userCIN,
+        userEmail: this.userEmail
+      };
       const res = await axios.post(
         "http://localhost/Management-of-appointments-for-a-lawyer/ApiUser/create",
-        {
-          userFirstName: this.userFirstName,
-          userLastName: this.userLastName,
-          userCIN: this.userCIN,
-          userEmail: this.userEmail
-        }
+        obj
       );
 
       alert(res.data.message);
