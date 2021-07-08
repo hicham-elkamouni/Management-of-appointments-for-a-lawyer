@@ -155,7 +155,7 @@ class ApiUser
     
             } else {
     
-                $u_arr = array('message' => 'user note iserted',
+                $u_arr = array('message' => 'user not iserted',
                 'state' => false);
     
                 echo json_encode($u_arr);

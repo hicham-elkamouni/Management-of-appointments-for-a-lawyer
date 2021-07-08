@@ -17,26 +17,17 @@ const routes = [{
             import ( /* webpackChunkName: "about" */ "../views/About.vue"),
     },
     {
-        path: "/SignUp",
-        name: "SignUp",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import ( /* webpackChunkName: "SignUp" */ "../views/SignUp.vue"),
-    },
-    {
-        path: "/SignIn",
-        name: "SignIn",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import ( /* webpackChunkName: "SignIn" */ "../views/SignIn.vue"),
-    },
-    {
         path: "/Booking",
         name: "Booking",
+        beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem("userId") === null) {
+                next({
+                    path: "/sign",
+                });
+            } else {
+                next();
+            }
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -46,11 +37,29 @@ const routes = [{
     {
         path: "/Dashboard",
         name: "Dashboard",
+        beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem("userId") === null) {
+                next({
+                    path: "/sign",
+                });
+            } else {
+                next();
+            }
+        },
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
             import ( /* webpackChunkName: "Dashboard" */ "../views/Dashboard.vue"),
+    },
+    {
+        path: "/Sign",
+        name: "Sign",
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import ( /* webpackChunkName: "Dashboard" */ "../views/Sign.vue"),
     },
 ];
 

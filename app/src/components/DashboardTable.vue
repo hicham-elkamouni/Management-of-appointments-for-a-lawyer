@@ -37,6 +37,16 @@ export default {
     };
   },
   methods: {
+    deleteAnAppointment() {},
+
+    checkuser() {
+      let userId = sessionStorage.getItem("userId");
+      if (userId == 5) {
+        this.getAllAppointements();
+      } else {
+        this.$router.push("/sign");
+      }
+    },
     async getAllAppointements() {
       /* let uid = sessionStorage.getItem("userId"); */
       let obj = "";
@@ -55,7 +65,7 @@ export default {
     }
   },
   beforeMount() {
-    this.getAllAppointements();
+    this.checkuser();
   }
 };
 </script>

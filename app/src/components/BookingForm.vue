@@ -7,6 +7,7 @@
           class="form_input"
           type="date"
           v-model="AppointementDate"
+          :min="TodayDate()"
           @change="getAvailableTimes"
         />
       </div>
@@ -46,10 +47,19 @@ export default {
       timeslot: "",
       AppointementDate: "",
       subject: "",
-      times_obj: {}
+      times_obj: {},
+      today: ""
     };
   },
   methods: {
+    TodayDate() {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, "0");
+      var mm = String(today.getMonth() + 1).padStart(2, "0");
+      var yyyy = today.getFullYear();
+      today = yyyy + "-" + mm + "-" + dd;
+      return today;
+    },
     async getAvailableTimes() {
       console.log(this.AppointementDate);
       let obj = {

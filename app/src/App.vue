@@ -2,8 +2,7 @@
   <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/SignUp">SignUp</router-link> |
-    <router-link to="/SignIn">SignIn</router-link> |
+    <router-link to="/Sign">Sign</router-link> |
     <router-link to="/Booking">Booking</router-link> |
     <router-link to="/Dashboard">Dashboard</router-link>
     <router-view />
