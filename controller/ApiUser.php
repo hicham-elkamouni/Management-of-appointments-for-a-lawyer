@@ -11,7 +11,7 @@ class ApiUser
     public function index()
     {
         // header('Location:')
-        echo ("this an index method");
+        echo ("it should be redirected to the home page");
     }
 
     public function getUserInfos($id)

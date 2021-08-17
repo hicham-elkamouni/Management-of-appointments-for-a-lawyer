@@ -91,8 +91,21 @@ export default {
 
       if (response.data.status == true) {
         console.log(response.data.message);
+        this.$router.push("/Dashboard");
+      }
+    },
+    checkuser() {
+      let userId = sessionStorage.getItem("userId");
+      console.log(typeof userId);
+      if (userId != null) {
+        console.log("OKKKK");
+      } else {
+        this.$router.push("/sign");
       }
     }
+  },
+  beforeMount() {
+    this.checkuser();
   }
 };
 </script>

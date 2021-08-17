@@ -1,10 +1,11 @@
 <template>
   <div class="table-wrapper">
-    <table class="fl-table">
+    <table class="fl-table" v-if="app">
       <thead>
         <tr>
           <th>Appointment ID</th>
           <th>Subject</th>
+          <th>Date</th>
           <th>Time</th>
           <th>Status</th>
           <th>CRUD</th>
@@ -17,12 +18,22 @@
         >
           <td>{{ index + 1 }}</td>
           <td>{{ appointement.user_subject }}</td>
+          <td>{{ appointement.c_date }}</td>
           <td>{{ appointement.start_at }} - {{ appointement.end_at }}</td>
           <td>{{ appointement.appointement_id }}</td>
-          <td><button>update</button><button>delete</button></td>
+          <td>
+            <button class="btn">update</button>
+            <button
+              class="btn btn2"
+              @click="deleteAnAppointement(appointement.appointement_id)"
+            >
+              delete
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
+    <p v-else>There are no appointments</p>
   </div>
 </template>
 
@@ -33,34 +44,53 @@ export default {
   data() {
     return {
       appointements_obj: {},
-      user_personal_informations: {}
+      user_personal_informations: {},
+      app: false
     };
   },
   methods: {
-    deleteAnAppointment() {},
+    async deleteAnAppointement(id) {
+      console.log(id);
+      let obj = {
+        appointement_id: id
+      };
+      console.log(obj);
+      const response = await axios.delete(
+        `http://localhost/Management-of-appointments-for-a-lawyer/ApiAppointement/deleteAnAppointment/${id}`
+      );
+
+      if (response.data) {
+        console.log(response.data);
+      }
+      this.getAllAppointements();
+    },
 
     checkuser() {
       let userId = sessionStorage.getItem("userId");
-      if (userId == 5) {
+      if (userId != null) {
         this.getAllAppointements();
       } else {
         this.$router.push("/sign");
       }
     },
     async getAllAppointements() {
-      /* let uid = sessionStorage.getItem("userId"); */
+      let u_id = sessionStorage.getItem("userId");
       let obj = "";
       const response = await axios.get(
-        "http://localhost/Management-of-appointments-for-a-lawyer/ApiAppointement/showMyAppointments/28",
+        "http://localhost/Management-of-appointments-for-a-lawyer/ApiAppointement/showMyAppointments/" +
+          u_id,
         obj
       );
 
       if (response.data.status == true) {
+        this.app = true;
         console.log(response.data);
         this.appointements_obj = response.data.appointements;
         this.user_personal_informations = response.data.personal_infos;
         console.log("obj is : ");
         console.log(this.appointements_obj);
+      } else {
+        this.app = false;
       }
     }
   },
@@ -116,6 +146,19 @@ export default {
   background: #f8f8f8;
 }
 
+.btn {
+  width: 80px;
+  height: 25px;
+  background-color: #4fc3a1;
+  border: none;
+  margin: 0px 10px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.btn2 {
+  background-color: #f25c78;
+}
 /* Responsive */
 
 @media (max-width: 767px) {

@@ -107,6 +107,7 @@ export default {
         );
         localStorage.setItem("ifTrue", true);
 
+        this.$router.push("/Booking");
         /* console.log(res.data.reference); */
       } else {
         this.incomplete = true;
@@ -126,7 +127,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   justify-content: center;
@@ -167,6 +168,7 @@ export default {
   background-color: #42b983;
   border: none;
   border-radius: 20px;
+  margin-bottom: 10px;
 }
 
 .swap {

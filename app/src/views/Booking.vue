@@ -9,7 +9,6 @@
 import BookingForm from "@/components/BookingForm.vue";
 
 export default {
-  name: "Booking",
   components: {
     BookingForm
   }

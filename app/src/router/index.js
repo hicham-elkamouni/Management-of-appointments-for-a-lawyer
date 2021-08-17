@@ -19,15 +19,15 @@ const routes = [{
     {
         path: "/Booking",
         name: "Booking",
-        beforeEnter: (to, from, next) => {
-            if (sessionStorage.getItem("userId") === null) {
-                next({
-                    path: "/sign",
-                });
-            } else {
-                next();
-            }
-        },
+        /* beforeEnter: (to, from, next) => {
+                    if (sessionStorage.getItem("userId") === null) {
+                        next({
+                            path: "/sign",
+                        });
+                    } else {
+                        next();
+                    }
+                }, */
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -37,15 +37,15 @@ const routes = [{
     {
         path: "/Dashboard",
         name: "Dashboard",
-        beforeEnter: (to, from, next) => {
-            if (sessionStorage.getItem("userId") === null) {
-                next({
-                    path: "/sign",
-                });
-            } else {
-                next();
-            }
-        },
+        /* beforeEnter: (to, from, next) => {
+                    if (sessionStorage.getItem("userId") === null) {
+                        next({
+                            path: "/sign",
+                        });
+                    } else {
+                        next();
+                    }
+                }, */
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
@@ -59,7 +59,7 @@ const routes = [{
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ( /* webpackChunkName: "Dashboard" */ "../views/Sign.vue"),
+            import ( /* webpackChunkName: "Sign" */ "../views/Sign.vue"),
     },
 ];
 

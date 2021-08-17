@@ -5,10 +5,13 @@ class ApiAppointement
     public $user_reference;
     public $user_id;
 
+    public function index(){
+       /*  return  */
+    }
+
     public function checkUser()
     {
 
-        // headers
 
         // instantiate Database
         $database = new Database();
@@ -24,7 +27,7 @@ class ApiAppointement
     public function createAnAppointement()
     {
 
-        // headers
+
 
         // instantiate Database
         $database = new Database();
@@ -58,7 +61,7 @@ class ApiAppointement
     public function deleteAnAppointment($id)
     {
 
-        // headers
+
         
         // instantiate Database
         $database = new Database();
@@ -67,19 +70,23 @@ class ApiAppointement
         // instantiate User object
         $Appointement = new Appointements($db);
 
-        //get raw posted data 
-        $data = json_decode(file_get_contents("php://input"));
+        // //get raw posted data 
+        // $data = json_decode(file_get_contents("php://input"));
 
         $Appointement->appointement_id = $id;
+
+        // $Appointement->appointement_id = $data->appointement_id;
 
         if ($Appointement->deleteAnAppointement()) {
 
             echo json_encode(
-                array('message' => 'Appointment deleted')
+                array('message' => 'Appointment deleted',
+                        'status' => true   )
             );
         } else {
             echo json_encode(
-                array('message' => 'Appointment is not deleted')
+                array('message' => 'Appointment is not deleted',
+                        'status' => false)
             );
         }
     }
@@ -87,7 +94,7 @@ class ApiAppointement
     public function updateAnAppointement($id)
     {
 
-        // headers
+
 
         // instantiate Database
         $database = new Database();
@@ -121,7 +128,7 @@ class ApiAppointement
 
     public function showMyAppointments($id)
     {
-        // headers
+
 
         // instantiate Database
         $database = new Database();
@@ -198,7 +205,7 @@ class ApiAppointement
 
     public function checkAvailableTimes()
     {
-        // headers
+
 
         // instantiate Database
         $database = new Database();
